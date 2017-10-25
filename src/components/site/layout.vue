@@ -12,6 +12,7 @@
                         <a href="/login.html">登录</a>
                         <a href="/register.html">注册</a>
                         <strong>|</strong>
+                       <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{buyCount}}</span>)</a>
                     </div>
                 </div>
             </div>
@@ -69,6 +70,10 @@
 </template>
 
 <script>
+    import {
+        vm,
+        key
+    } from '../../kits/vm.js';
     // 实现菜单的翻滚
     $(function() {
         $("#menu2 li a").wrapInner('<span class="out"></span>');
@@ -96,7 +101,14 @@
     });
     export default {
         data() {
-            return {}
+            return {
+                buyCount: 0
+            }
+        },
+        mounted() {
+            vm.$on(key, (buyCount) => {
+                this.buyCount += buyCount;
+            })
         },
         methods: {}
     }
