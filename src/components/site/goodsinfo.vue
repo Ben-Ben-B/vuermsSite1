@@ -91,7 +91,7 @@
                                     <dl>
                                         <dd>
                                             <div class="btn-buy" id="buyButton">
-                                                <button class="buy" onclick="cartAdd(this,'/',1,'/shopping.html');">立即购买</button>
+                                                <button class="buy" >立即购买</button>
                                                 <button class="add" @click="addCar">加入购物车</button>
                                             </div>
                                         </dd>
@@ -203,13 +203,16 @@
 </template>
 
 <script>
-    import {
-        vm,
-        key
-    } from '../../kits/vm.js';
+    // import {
+    //     vm,
+    //     key
+    // } from '../../kits/vm.js';
     // 按需导入iview这个框架中的affix组件
     import Affix from 'iview/src/components/affix';
     import '../../../statics/site/js/jqplugins/imgzoom/magnifier.js';
+    import {
+        setItem
+    } from '../../kits/localStorageKit.js';
     export default {
         components: {
             Affix
@@ -242,7 +245,13 @@
         },
         methods: {
             addCar() {
-                vm.$emit(key, this.buyCount)
+                // vm.$emit(key, this.buyCount)
+                this.$store.dispatch('changeBuyCount', this.buyCount);
+                setItem({
+                    gid: this.$route.params.goodsid,
+                    bcount: this.buyCount
+                });
+
             },
             pageIndexChange(pageIndex) {
                 this.pageIndex = pageIndex;

@@ -21,6 +21,7 @@ import goodslist from './components/site/goodslist.vue';
 
 // 导入商品详情组件
 import goodsinfo from './components/site/goodsinfo.vue';
+import car from './components/site/car.vue'
 
 var router = new vueRouter({
     routes: [
@@ -31,7 +32,8 @@ var router = new vueRouter({
             component: layout,
             children: [
                 { name: 'goodslist', path: 'goodslist', component: goodslist }, //商品列表的路由规则
-                { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo }
+                { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo },
+                { name: 'car', path: 'car', component: car },
             ]
         }
     ]
@@ -87,12 +89,56 @@ Vue.filter('datefmt', (input, fmtstring) => {
 
 });
 
+var state = {
+    buyCount: 0
+};
+// 2.0 action (购物车按钮点击的时候触发action,代码： this.$store.dispatch('changeBuyCount'),购买数量)
+var actions = {
+    changeBuyCount({ commit }, parmsBuyCount) {
+        commit('changeBuyCount', parmsBuyCount);
+    }
+};
+
+var mutations = {
+    changeBuyCount(state, parmsBuyCount) {
+        state.buyCount += parmsBuyCount;
+    }
+};
+import { getItem } from './kits/localStorageKit'
+var getters = {
+    // 如果想要在 组件的使用 this.$store.getters.getCount的地方能够state.buyCount的值的改变而自动刷新，
+    //就一定 要在这个方法中依赖state.buyCount，否则不会自动触发刷新
+    getCount(state) {
+
+        if (state.buyCount > 0) {
+            return state.buyCount;
+        };
+        var goodsObj = getItem();
+        var count = 0;
+        for (var key in goodsObj) {
+            count++;
+        };
+        // console.log(goodsObj)
+        state.buyCount = count;
+        return state.buyCount;
+    }
+};
+
+import vuex from 'vuex';
+Vue.use(vuex);
+var store = new vuex.Store({
+    state,
+    actions,
+    mutations,
+    getters
+});
 new Vue({
     el: '#app',
     // 使用app这个组件对象
     // es5的写法
     // render:function(create){create(App);}
     router,
+    store,
     // es6的写法 :将app当做根组件替换index1.html这个模板中的<div id="app">
     render: create => create(App)
 });
