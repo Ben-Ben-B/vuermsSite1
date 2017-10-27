@@ -3,9 +3,9 @@ const key = 'buyGoodsCount';
 // goodsinfo:{gid:88,bcount:1}
 export function setItem(goodsinfo) {
     var goodsObj = getItem();
-    console.log(goodsObj, 'setitem')
+
     if (goodsObj[goodsinfo.gid]) {
-        console.log(goodsObj[goodsinfo.gid])
+
         goodsObj[goodsinfo.gid] += goodsinfo.bcount;
     } else {
         goodsObj[goodsinfo.gid] = goodsinfo.bcount;

@@ -21,8 +21,9 @@ import goodslist from './components/site/goodslist.vue';
 
 // 导入商品详情组件
 import goodsinfo from './components/site/goodsinfo.vue';
-import car from './components/site/car.vue'
-
+import car from './components/site/car.vue';
+import login from './components/site/login.vue';
+import shopping from './components/site/shopping.vue';
 var router = new vueRouter({
     routes: [
         { name: 'default', path: '/', redirect: '/site' },
@@ -34,11 +35,28 @@ var router = new vueRouter({
                 { name: 'goodslist', path: 'goodslist', component: goodslist }, //商品列表的路由规则
                 { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo },
                 { name: 'car', path: 'car', component: car },
+                { name: 'login', path: 'login', component: login },
+                { name: 'shopping', path: 'shopping', component: shopping, meta: { 'islogin': true } }
             ]
         }
     ]
 });
-
+router.beforeEach((to, from, next) => {
+    if (to.name !== 'login') {
+        localStorage.setItem('currentRouteName', to.name);
+    };
+    if (to.meta.islogin) {
+        axios.get('/site/account/islogin').then(res => {
+            if (res.data.code == "logined") {
+                next();
+            } else {
+                router.push({ name: 'login' });
+            }
+        });
+    } else {
+        next()
+    }
+});
 // 2.0 axios的使用
 // 2.0.1 导入axios包
 import axios from 'axios';
