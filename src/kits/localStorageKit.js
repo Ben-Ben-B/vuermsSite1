@@ -34,3 +34,11 @@ export function remoteItem(goodsId) {
     delete goodsObj[goodsId];
     localStorage.setItem(key, JSON.stringify(goodsObj));
 };
+// 4.0 更新某个商品的购买数量
+export function updateItem(obj) {
+    //{gid:'',count:''}
+    var goodsObj = getItem();
+    console.log(obj.count)
+    goodsObj[obj.gid] = obj.count;
+    localStorage.setItem(key, JSON.stringify(goodsObj));
+};

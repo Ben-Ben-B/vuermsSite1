@@ -111,11 +111,11 @@
                     <ul class="img-list">
 
                         <li v-for="item in item.datas" :key="item.artID">
-                            <a href="/goods/show-91.html">
+                            <router-link v-bind="{to:'/site/goodsinfo/'+item.artID}">
                                 <div class="img-box">
-                                        <router-link v-bind="{to:'/site/goodsinfo/'+item.artID}">
+                                       
                                             <img :src="item.img_url">
-                                        </router-link>
+                                        
                                 </div>
                                 <div class="info">
                                     <h3 v-text="item.artTitle"></h3>
@@ -128,7 +128,7 @@
                                         </span>
                                     </p>
                                 </div>
-                            </a>
+                            </router-link>
                         </li>
                     </ul>
                 </div>

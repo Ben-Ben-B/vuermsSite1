@@ -24,6 +24,7 @@ import goodsinfo from './components/site/goodsinfo.vue';
 import car from './components/site/car.vue';
 import login from './components/site/login.vue';
 import shopping from './components/site/shopping.vue';
+import pay from './components/site/pay.vue';
 var router = new vueRouter({
     routes: [
         { name: 'default', path: '/', redirect: '/site' },
@@ -36,7 +37,8 @@ var router = new vueRouter({
                 { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo },
                 { name: 'car', path: 'car', component: car },
                 { name: 'login', path: 'login', component: login },
-                { name: 'shopping', path: 'shopping', component: shopping, meta: { 'islogin': true } }
+                { name: 'shopping', path: 'shopping/:ids', component: shopping, meta: { 'islogin': true } },
+                { name: 'pay', path: 'pay/:orderid', component: pay, meta: { islogin: true } },
             ]
         }
     ]

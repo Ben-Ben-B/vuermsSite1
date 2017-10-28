@@ -109,7 +109,7 @@
                     <div class="cart-foot clearfix">
                         <div class="right-box">
                             <button class="button" onclick="javascript:location.href='/index.html';">继续购物</button>
-                           <router-link to="/site/shopping"> <button class="submit" >立即结算</button></router-link>
+                            <button class="submit" @click='toshopping'>立即结算</button>
                         </div>
                     </div>
                     <!--购物车底部-->
@@ -123,7 +123,8 @@
     import myinput from '../subcom/myinputNumber.vue';
     import {
         getItem,
-        remoteItem
+        remoteItem,
+        updateItem
     } from '../../kits/localStorageKit.js';
     export default {
         components: {
@@ -160,6 +161,27 @@
             }
         },
         methods: {
+            toshopping() {
+                var ids = '';
+                var idsArr = [];
+                this.values.forEach((item, index) => {
+                    if (item) {
+                        idsArr.push(this.list[index].id);
+                    }
+                });
+                ids = idsArr.join(',');
+                var flag = this.values.some(item => item);
+                if (!flag) {
+                    this.$message.error('请选择商品');
+                    return;
+                }
+                this.$router.push({
+                    name: 'shopping',
+                    params: {
+                        ids: ids
+                    }
+                });
+            },
             update(obj) {
                 this.list.forEach(item => {
                     if (item.id == obj.gid) {
@@ -167,7 +189,11 @@
                     };
 
                 });
-
+                console.log(obj)
+                updateItem({
+                    gid: obj.gid,
+                    count: obj.count
+                });
             },
             //有一个未选就反选，否则全选
             changeSeleted(cSelected) {
