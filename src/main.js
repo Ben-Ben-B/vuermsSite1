@@ -27,6 +27,8 @@ import shopping from './components/site/shopping.vue';
 import pay from './components/site/pay.vue';
 import payamount from './components/site/payamount.vue';
 import paysuccess from './components/site/paysuccess.vue';
+import vipcenter from './components/site/vipcenter.vue';
+
 var router = new vueRouter({
     routes: [
         { name: 'default', path: '/', redirect: '/site' },
@@ -43,6 +45,7 @@ var router = new vueRouter({
                 { name: 'login', path: 'login', component: login },
                 { name: 'shopping', path: 'shopping/:ids', component: shopping, meta: { 'islogin': true } },
                 { name: 'pay', path: 'pay/:orderid', component: pay, meta: { islogin: true } },
+                { name: 'vipcenter', path: 'vip/center', component: vipcenter, meta: { islogin: true } },
                 { name: 'paysuccesspc', path: 'paysuccesspc', component: paysuccess },
             ]
         }

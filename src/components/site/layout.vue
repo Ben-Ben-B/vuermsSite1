@@ -9,8 +9,10 @@
                         <a target="_blank" href="#"></a>
                     </div>
                     <div id="menu" class="right-box">
-                        <router-link to="/site/login">登录</router-link>
-                        <a href="/register.html">注册</a>
+                        <router-link v-if='!isvipshow' to="/site/login">登录</router-link>
+                        <a href="/register.html" v-if='!isvipshow'>注册</a>
+                        <router-link v-if='isvipshow' to="/site/vip/center">会员中心</router-link>
+                        <a href="javacript:void(0);" v-if='isvipshow' @click="logout">退出</a>
                         <strong>|</strong>
                      <router-link to="/site/car">
                         <i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{this.$store.getters.getCount}}</span>)
@@ -72,10 +74,9 @@
 </template>
 
 <script>
-    // import {
-    //     vm,
-    //     key
-    // } from '../../kits/vm.js';
+    import {
+        vm
+    } from '../../kits/vm.js';
     // 实现菜单的翻滚
     $(function() {
         $("#menu2 li a").wrapInner('<span class="out"></span>');
@@ -104,16 +105,39 @@
     export default {
         data() {
             return {
-                buyCount: 0
+                buyCount: 0,
+                isvipshow: false
             }
         },
+
         mounted() {
             // vm.$on(key, (buyCount) => {
             //     this.buyCount += buyCount;
             // })
-
+            vm.$on('changeshow', () => {
+                this.checklogin();
+            });
+            this.checklogin();
         },
-        methods: {}
+        methods: {
+            checklogin() {
+                var islogin = localStorage.getItem('islogin');
+                if (islogin == 'true') {
+                    this.isvipshow = true;
+                } else {
+                    this.isvipshow = false;
+                }
+            },
+            logout() {
+                this.$http.get('/site/account/logout').then(res => {
+                    if (res.data.status == 1) {
+                        this.$message.error(res.data.message);
+                    };
+                    this.isvipshow = false;
+                    localStorage.getItem('islogin', false);
+                });
+            }
+        }
     }
 </script>
 <style>

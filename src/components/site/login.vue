@@ -39,6 +39,9 @@
 </template>
 
 <script>
+    import {
+        vm
+    } from '../../kits/vm';
     export default {
         data() {
             return {
@@ -60,6 +63,8 @@
                     if (!toRouteName) {
                         toRouteName = 'goodslist';
                     }
+                    localStorage.setItem('islogin', true);
+                    vm.$emit('changeshow');
                     this.$router.push({
                         name: toRouteName
                     })
