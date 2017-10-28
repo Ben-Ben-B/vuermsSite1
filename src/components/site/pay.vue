@@ -21,13 +21,13 @@
                                     <div class="el-col el-col-12">
                                         <dl class="form-group">
                                             <dt>订 单 号：</dt>
-                                            <dd>BD20171025194642275</dd>
+                                            <dd>{{orderinfo.order_no}}</dd>
                                         </dl>
                                     </div>
                                     <div class="el-col el-col-12">
                                         <dl class="form-group">
                                             <dt>收货人姓名：</dt>
-                                            <dd>ivan</dd>
+                                            <dd v-text='orderinfo.accept_name'></dd>
                                         </dl>
                                     </div>
                                 </div>
@@ -35,14 +35,14 @@
                                     <div class="el-col el-col-12">
                                         <dl class="form-group">
                                             <dt>送货地址：</dt>
-                                            <dd>天津市,市辖区,和平区
+                                            <dd v-text='orderinfo.area'>
                                             </dd>
                                         </dl>
                                     </div>
                                     <div class="el-col el-col-12">
                                         <dl class="form-group">
                                             <dt>手机号码：</dt>
-                                            <dd>sdfsdf</dd>
+                                            <dd v-text='orderinfo.mobile'></dd>
                                         </dl>
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@
                                     <div class="el-col el-col-12">
                                         <dl class="form-group">
                                             <dt>支付金额：</dt>
-                                            <dd>3019 元</dd>
+                                            <dd>{{orderinfo.order_amount}} 元</dd>
                                         </dl>
                                     </div>
                                     <div class="el-col el-col-12">
@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="message">
                                     <span>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</span>
-                                    <span>sdf</span>
+                                    <span v-text='orderinfo.message'>sdf</span>
                                 </div>
                             </div>
                             <div class="el-col el-col-8">
@@ -82,11 +82,59 @@
 </template>
 
 <script>
+    import '../../../statics/site/js/jqplugins/qr/jqueryqr'
+
+    import kits from '../../kits/kits.js'
     export default {
         data() {
-            return {}
+            return {
+                orderinfo: {},
+                orderid: this.$route.params.orderid,
+                interval: null
+            }
         },
-        methods: {}
+        created() {
+            this.getorderinfo();
+        },
+        mounted() {
+            var amount = this.$route.params.amount;
+
+            // 设置二维码
+            $("#container").erweima({
+                label: '黑马广州前端支付',
+                text: kits.payurl + '/' + this.orderid + '/' + amount
+            });
+            this.interval = setInterval(this.checkorderStatus, 5000);
+
+        },
+        beforeDestroy() {
+            if (this.interval) {
+                // 清空
+                clearInterval(this.interval);
+            }
+        },
+        methods: {
+            checkorderStatus() {
+                this.$http.get('/site/validate/order/getorder/' + this.orderid).then(res => {
+                    // 返回数据中的status为2的时候就跳转到支付成功页面，否则一直停留在支付页面
+                    if (res.data.message[0].status == 2) {
+                        // 支付成功跳转到
+                        this.$router.push({
+                            name: 'paysuccesspc'
+                        });
+                    }
+                });
+            },
+            getorderinfo() {
+                this.$http.get('/site/validate/order/getorder/' + this.orderid).then(res => {
+                    if (res.data.status == 1) {
+                        this.$message.error(res.data.message);
+                    };
+                    this.orderinfo = res.data.message[0];
+                    console.log(this.orderinfo)
+                });
+            }
+        }
     }
 </script>
 <style>

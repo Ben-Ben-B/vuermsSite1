@@ -25,9 +25,13 @@ import car from './components/site/car.vue';
 import login from './components/site/login.vue';
 import shopping from './components/site/shopping.vue';
 import pay from './components/site/pay.vue';
+import payamount from './components/site/payamount.vue';
+import paysuccess from './components/site/paysuccess.vue';
 var router = new vueRouter({
     routes: [
         { name: 'default', path: '/', redirect: '/site' },
+        { name: 'payamount', path: '/site/payamount/:orderid/:amount', component: payamount },
+        { name: 'paysuccess', path: '/site/paysuccess', component: paysuccess },
         {
             name: 'layout',
             path: '/site',
@@ -39,6 +43,7 @@ var router = new vueRouter({
                 { name: 'login', path: 'login', component: login },
                 { name: 'shopping', path: 'shopping/:ids', component: shopping, meta: { 'islogin': true } },
                 { name: 'pay', path: 'pay/:orderid', component: pay, meta: { islogin: true } },
+                { name: 'paysuccesspc', path: 'paysuccesspc', component: paysuccess },
             ]
         }
     ]
