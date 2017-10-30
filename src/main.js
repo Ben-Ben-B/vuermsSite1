@@ -28,7 +28,10 @@ import pay from './components/site/pay.vue';
 import payamount from './components/site/payamount.vue';
 import paysuccess from './components/site/paysuccess.vue';
 import vipcenter from './components/site/vipcenter.vue';
-
+import onecenter from './components/site/onecenter.vue';
+import myorderlist from './components/site/myorderlist.vue';
+import orderdetial from './components/site/orderdetial.vue';
+import vipmyorderlist from './components/site/myorderlist.vue';
 var router = new vueRouter({
     routes: [
         { name: 'default', path: '/', redirect: '/site' },
@@ -45,7 +48,17 @@ var router = new vueRouter({
                 { name: 'login', path: 'login', component: login },
                 { name: 'shopping', path: 'shopping/:ids', component: shopping, meta: { 'islogin': true } },
                 { name: 'pay', path: 'pay/:orderid', component: pay, meta: { islogin: true } },
-                { name: 'vipcenter', path: 'vip/center', component: vipcenter, meta: { islogin: true } },
+                {
+                    name: 'vipcenter',
+                    path: 'vip/center',
+                    component: vipcenter,
+                    meta: { islogin: true },
+                    children: [
+                        { name: 'onecenter', path: 'onecenter', component: onecenter },
+                        { name: 'orderdetial', path: 'orderdetial/:orderid', component: orderdetial, meta: { islogin: true } },
+                        { name: 'vipmyorderlist', path: 'vipmyorderlist', component: vipmyorderlist, meta: { islogin: true } }
+                    ]
+                },
                 { name: 'paysuccesspc', path: 'paysuccesspc', component: paysuccess },
             ]
         }
@@ -111,7 +124,7 @@ Vue.filter('datefmt', (input, fmtstring) => {
     if (fmtstring == 'YYYY-MM-DD') {
         return y + '-' + m + '-' + d;
     }
-    if (fmtstring == 'YYYY-MM-DD HH:mm:ss') {
+    if (fmtstring == 'YYYY-MM-DD hh:mm:ss') {
         return y + '-' + m + '-' + d + ' ' + h + ':' + mi + ':' + s;
     }
 

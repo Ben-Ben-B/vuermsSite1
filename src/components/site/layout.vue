@@ -133,8 +133,11 @@
                     if (res.data.status == 1) {
                         this.$message.error(res.data.message);
                     };
+                    localStorage.setItem('islogin', false);
+
                     this.isvipshow = false;
-                    localStorage.getItem('islogin', false);
+
+
                 });
             }
         }
